@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: qr-api
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: qr-api
+  template:
+    metadata:
+      labels:
+        app: qr-api
+    spec:
+      containers:
+        - name: qr-api
+          image: elvisprime/qr-api:latest
+          ports:
+            - containerPort: 8000
+          envFrom:
+            - secretRef:
+                name: aws-creds
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: qr-api
+spec:
+  selector:
+    app: qr-api
+  ports:
+    - port: 8000
+      targetPort: 8000
+  type: ClusterIP
