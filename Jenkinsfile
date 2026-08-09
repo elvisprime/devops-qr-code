@@ -1,18 +1,19 @@
 pipeline {
 agent any
 
-```
 environment {
     DOCKERHUB_USER = 'elvisprime'
     AWS_REGION     = 'eu-north-1'
     CLUSTER_NAME   = 'qr-cluster'
-    IMAGE_TAG      = "${env.GIT_COMMIT.take(7)}"
 }
 
 stages {
     stage('Checkout') {
         steps {
             checkout scm
+            script {
+                env.IMAGE_TAG = env.GIT_COMMIT.take(7)
+            }
         }
     }
 
@@ -68,6 +69,5 @@ post {
         echo "Pipeline failed — check logs above."
     }
 }
-```
 
 }
